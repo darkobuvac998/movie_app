@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/widgets/comments/comment.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 import '../models/show_full.dart';
 import '../widgets/texts/awards.dart';
@@ -15,12 +16,30 @@ import '../widgets/texts/ratings.dart';
 import '../widgets/texts/title.dart' as ttl;
 import '../widgets/texts/year_runtime_released.dart';
 
-class ShowDetailScreen extends StatelessWidget {
+class ShowDetailScreen extends StatefulWidget {
   static const routName = '/show-detail-screen';
+
   const ShowDetailScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ShowDetailScreen> createState() => _ShowDetailScreenState();
+}
+
+class _ShowDetailScreenState extends State<ShowDetailScreen> {
+  bool _isInit = true;
+  bool _showComments = false;
+
+  void _showCommentsToggle() {
+    setState(() {
+      _showComments = !_showComments;
+    });
+  }
+
   Future<void> _refreshMovieItem(BuildContext ctx, String imdbId) async {
-    await Provider.of<Movie>(ctx, listen: false).getMovie(imdbId);
+    if (_isInit) {
+      await Provider.of<Movie>(ctx, listen: false).getMovie(imdbId);
+      _isInit = false;
+    }
   }
 
   List<Widget> _buildSliverListChildren(BuildContext ctx, ShowFull? data) {
@@ -175,6 +194,53 @@ class ShowDetailScreen extends StatelessWidget {
     return result;
   }
 
+  Widget _buildSliverListChildrenComments(
+      BuildContext ctx, String movieId, MediaQueryData mediaQuery) {
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('movie-comments/$movieId/comments')
+          .snapshots(),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        final docs = snapshot.data?.docs;
+        if (docs!.isEmpty) {
+          return const Center(
+            child: Text(
+              'No comments',
+            ),
+          );
+        }
+        return Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
+          height: (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.7,
+          child: Column(
+            children: [
+              const Text(
+                'Commetns',
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (ctx, i) {
+                    return Comment(
+                      data: docs[i]['comment'],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -189,6 +255,12 @@ class ShowDetailScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             actions: [
+              IconButton(
+                onPressed: _showCommentsToggle,
+                icon: const Icon(
+                  Icons.insert_comment,
+                ),
+              ),
               IconButton(
                 icon: const Icon(
                   Icons.favorite,
@@ -223,7 +295,7 @@ class ShowDetailScreen extends StatelessWidget {
                   return SliverList(
                     delegate: SliverChildListDelegate(
                       [
-                        Container(
+                        SizedBox(
                           height: (mediaQuery.size.height -
                                   mediaQuery.viewInsets.top) *
                               0.7,
@@ -239,7 +311,8 @@ class ShowDetailScreen extends StatelessWidget {
                     delegate: SliverChildListDelegate(
                       [
                         if (Provider.of<Movie>(context, listen: false).movie !=
-                            null)
+                                null &&
+                            !_showComments)
                           ..._buildSliverListChildren(
                             context,
                             Provider.of<Movie>(context, listen: false).movie,
@@ -253,6 +326,9 @@ class ShowDetailScreen extends StatelessWidget {
                               );
                             },
                           ).toList(),
+                        if (_showComments)
+                          _buildSliverListChildrenComments(
+                              context, args['id'], mediaQuery)
                       ],
                     ),
                   );

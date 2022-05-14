@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,7 +7,9 @@ import 'providers/movies.dart';
 import 'screens/base_screen.dart';
 import 'screens/show_detail_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -60,7 +63,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const BaseScreen(),
         routes: {
-          ShowDetailScreen.routName: (context) => const ShowDetailScreen(),
+          ShowDetailScreen.routName: (context) => ShowDetailScreen(),
         },
       ),
     );

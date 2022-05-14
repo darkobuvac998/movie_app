@@ -19,9 +19,9 @@ class Movie with ChangeNotifier {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      // print(extractedData);
       final ShowFull loadedMovie = ShowFull.fromMap(extractedData);
       _movie = loadedMovie;
+      print(movie?.imdbID);
       print(movie);
       notifyListeners();
     } catch (error) {
