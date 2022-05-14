@@ -1,0 +1,138 @@
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                height:
+                    (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.7,
+                child: FutureBuilder(
+                  future: _refreshMovieItem(
+                    context,
+                    args['id'],
+                  ),
+                  builder: (ctx, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Scaffold(
+                      body: Consumer<Movie>(
+                        builder: (ctx, movie, _) {
+                          final data = movie.movie as ShowFull;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                child: ttl.Title(
+                                  title: data.title,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: Image.asset(
+                                      'assets/pics/imdb_icon.jpeg',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    movie.movie!.imdbrating,
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Year: ${data.year}',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'Runtime: ${data.runtime}',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'Released: ${data.released}',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                ],
+                              ),
+                              const Divider(
+                                height: 20,
+                                thickness: 1,
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Director: ${data.director}',
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Writer: ${data.writer}',
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(
+                                height: 20,
+                                thickness: 1,
+                              ),
+                              Actors(
+                                actors: data.actors.split(
+                                  ',',
+                                ),
+                              ),
+                              const Divider(
+                                height: 20,
+                                thickness: 1,
+                              ),
+                              Plot(
+                                plot: data.plot,
+                              ),
+                              const Divider(
+                                height: 20,
+                                thickness: 1,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
