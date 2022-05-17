@@ -4,6 +4,8 @@ import 'package:movie_app/widgets/comments/comment.dart';
 import 'package:provider/provider.dart';
 
 import '../models/show_full.dart';
+import '../widgets/comments/comment_titlle.dart';
+import '../widgets/comments/comments.dart';
 import '../widgets/texts/awards.dart';
 import '../widgets/texts/countries.dart';
 import '../providers/movie.dart';
@@ -220,20 +222,12 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
           ),
           height: (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.7,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Commetns',
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: docs.length,
-                  itemBuilder: (ctx, i) {
-                    return Comment(
-                      data: docs[i]['comment'],
-                    );
-                  },
-                ),
-              ),
+              const CommentsTitle(),
+              Comments(
+                docs: docs,
+              )
             ],
           ),
         );
