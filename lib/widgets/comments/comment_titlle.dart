@@ -1,15 +1,33 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'new_comment.dart';
+
 class CommentsTitle extends StatelessWidget {
-  const CommentsTitle({Key? key}) : super(key: key);
+  final String movieId;
+  final bool commentExists;
+  const CommentsTitle({
+    required this.movieId,
+    required this.commentExists,
+    Key? key,
+  }) : super(key: key);
 
   void _addNewComment(BuildContext ctx) {
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(
+              5,
+            ),
+          ),
+        ),
         context: ctx,
-        builder: (contx) {
-          return const Center(
-            child: Text(
-              'New Comment!',
+        builder: (_) {
+          return GestureDetector(
+            onTap: () {},
+            behavior: HitTestBehavior.opaque,
+            child: NewComment(
+              movieId: movieId,
             ),
           );
         });
@@ -22,8 +40,8 @@ class CommentsTitle extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          child: Text(
-            'Comments',
+          child: Text( commentExists ?
+            'Comments' : 'There is no any comment',
             style: Theme.of(context).textTheme.headline4?.copyWith(
                   fontSize: 22,
                   color: Colors.white70,

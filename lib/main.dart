@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const BaseScreen(),
         routes: {
-          ShowDetailScreen.routName: (context) => ShowDetailScreen(),
+          ShowDetailScreen.routName: (ctx) => const ShowDetailScreen(),
         },
       ),
     );

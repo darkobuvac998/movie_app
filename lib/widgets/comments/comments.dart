@@ -5,10 +5,32 @@ import '../comments/comment.dart';
 
 class Comments extends StatelessWidget {
   final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs;
+  final String movieId;
   const Comments({
+    required this.movieId,
     required this.docs,
     Key? key,
   }) : super(key: key);
+
+  void _like(String id, int likes) async {
+    await FirebaseFirestore.instance
+        .collection('movie-comments/$movieId/comments')
+        .doc(id)
+        .update(
+      {
+        'likes': likes,
+      },
+    );
+  }
+
+  void _dislike(String id, int dislikes) async {
+    await FirebaseFirestore.instance
+        .collection('movie-comments/$movieId/comments')
+        .doc(id)
+        .update(
+      {'dislikes': dislikes},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +44,12 @@ class Comments extends StatelessWidget {
               bottom: 5,
             ),
             child: Comment(
+              id: docs[i].id,
               data: docs[i]['comment'],
               likes: docs[i]['likes'],
               dislikes: docs[i]['dislikes'],
+              like: _like,
+              dislike: _dislike,
             ),
           );
         },

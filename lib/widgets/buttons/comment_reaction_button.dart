@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class CommentReactionButton extends StatelessWidget {
   final IconData icon;
   final int votes;
+  final VoidCallback onPressed;
   const CommentReactionButton({
     required this.icon,
     required this.votes,
+    required this.onPressed,
     Key? key,
   }) : super(key: key);
 
@@ -19,7 +21,7 @@ class CommentReactionButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: onPressed,
               icon: Icon(
                 icon,
                 size: 15,

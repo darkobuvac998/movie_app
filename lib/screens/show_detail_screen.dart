@@ -209,25 +209,24 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
           );
         }
         final docs = snapshot.data?.docs;
-        if (docs!.isEmpty) {
-          return const Center(
-            child: Text(
-              'No comments',
-            ),
-          );
-        }
+
         return Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
           ),
-          height: (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.7,
+          height: (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.65,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CommentsTitle(),
-              Comments(
-                docs: docs,
-              )
+              CommentsTitle(
+                movieId: movieId,
+                commentExists: docs?.isNotEmpty ?? false,
+              ),
+              if (docs!.isNotEmpty)
+                Comments(
+                  movieId: movieId,
+                  docs: docs,
+                )
             ],
           ),
         );
@@ -250,17 +249,17 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
           SliverAppBar(
             actions: [
               IconButton(
+                icon: const Icon(
+                  Icons.favorite,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
                 onPressed: _showCommentsToggle,
                 icon: const Icon(
                   Icons.insert_comment,
                 ),
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.favorite,
-                ),
-                onPressed: () {},
-              )
             ],
             expandedHeight:
                 (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.3,
