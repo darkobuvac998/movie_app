@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'screens/auth_screen.dart';
 import 'providers/movie.dart';
 import 'providers/movies.dart';
 import 'screens/base_screen.dart';
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
         ),
-        home: const BaseScreen(),
+        home: const AuthScreen(),
         routes: {
           ShowDetailScreen.routName: (ctx) => const ShowDetailScreen(),
         },

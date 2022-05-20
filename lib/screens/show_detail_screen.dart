@@ -204,8 +204,13 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
           .snapshots(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return SizedBox(
+            height: (mediaQuery.size.height - mediaQuery.viewInsets.top) * 0.65,
+            child: const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 4,
+              ),
+            ),
           );
         }
         final docs = snapshot.data?.docs;
