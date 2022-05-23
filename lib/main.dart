@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/auth_screen.dart';
@@ -62,7 +64,15 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
         ),
-        home: const AuthScreen(),
+        home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapshot) {
+            if (snapshot.hasData) {
+              return const BaseScreen();
+            }
+            return const AuthScreen();
+          },
+        ),
         routes: {
           ShowDetailScreen.routName: (ctx) => const ShowDetailScreen(),
         },

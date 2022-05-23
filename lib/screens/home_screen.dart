@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/widgets/buttons/bottom_border_button_bar.dart';
+import 'package:movie_app/widgets/profile_badge.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/movies.dart';
@@ -7,7 +8,11 @@ import '../widgets/buttons/bottom_border_button.dart';
 import '../widgets/categories/category.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final VoidCallback onProfileBadgeTap;
+  const HomeScreen({
+    required this.onProfileBadgeTap,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,7 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _refreshItems(BuildContext ctx) async {
     return Future.delayed(Duration.zero, () async {
-      return await Provider.of<Movies>(ctx, listen: false).fetchData('harry potter');
+      return await Provider.of<Movies>(ctx, listen: false)
+          .fetchData('harry potter');
     });
   }
 
@@ -32,13 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.all(
+            padding: const EdgeInsets.all(
               12.0,
             ),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
+            child: ProfileBadge(
+              onTap: widget.onProfileBadgeTap,
             ),
           ),
         ],

@@ -48,6 +48,7 @@ class Comments extends StatelessWidget {
               data: docs[i]['comment'],
               likes: docs[i]['likes'],
               dislikes: docs[i]['dislikes'],
+              userName: (docs[i].data())['userName'] ?? 'Unknown user',
               like: _like,
               dislike: _dislike,
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/screens/profile_screen.dart';
 
 import 'home_screen.dart';
 
@@ -17,11 +18,17 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      _screens = const [
-        HomeScreen(),
-        HomeScreen(),
-        HomeScreen(),
-        HomeScreen(),
+      _screens = [
+        HomeScreen(
+          onProfileBadgeTap: () => _onIconTap(3),
+        ),
+        HomeScreen(
+          onProfileBadgeTap: () => _onIconTap(3),
+        ),
+        HomeScreen(
+          onProfileBadgeTap: () => _onIconTap(3),
+        ),
+        const ProfileScreen(),
       ];
       _isInit = false;
     }
@@ -38,7 +45,7 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[0],
+      body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 10,
         unselectedFontSize: 10,

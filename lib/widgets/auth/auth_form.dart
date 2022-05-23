@@ -22,9 +22,6 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  String _userEmail = '';
-  String _userName = '';
-  String _userPassword = '';
   var _isLogin = true;
   File? _userImageFile;
 
@@ -36,12 +33,16 @@ class _AuthFormState extends State<AuthForm>
   late AnimationController _controller;
   late Animation<Size> _heightAnimation;
 
+  TextEditingController _userNameCtrl = TextEditingController();
+  TextEditingController _userPasswordCtrl = TextEditingController();
+  TextEditingController _userEmailCtrl = TextEditingController();
+
   @override
   void initState() {
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(
-        milliseconds: 500,
+        milliseconds: 200,
       ),
     );
     _heightAnimation = Tween<Size>(
@@ -85,9 +86,9 @@ class _AuthFormState extends State<AuthForm>
 
     widget.onSubmit(
       context,
-      _userEmail.trim(),
-      _userPassword.trim(),
-      _userName.trim(),
+      _userEmailCtrl.text.trim(),
+      _userPasswordCtrl.text.trim(),
+      _userNameCtrl.text.trim(),
       _isLogin,
       _userImageFile,
     );
@@ -139,6 +140,7 @@ class _AuthFormState extends State<AuthForm>
                         imagePickFn: _pickedImage,
                       ),
                     TextFormField(
+                      controller: _userEmailCtrl,
                       key: const ValueKey('Email'),
                       autocorrect: false,
                       textCapitalization: TextCapitalization.none,
@@ -160,12 +162,10 @@ class _AuthFormState extends State<AuthForm>
                         }
                         return null;
                       },
-                      onSaved: (value) {
-                        _userEmail = value ?? '';
-                      },
                     ),
                     if (!_isLogin)
                       TextFormField(
+                        controller: _userNameCtrl,
                         key: const ValueKey('Username'),
                         autocorrect: true,
                         textCapitalization: TextCapitalization.words,
@@ -186,11 +186,9 @@ class _AuthFormState extends State<AuthForm>
                           }
                           return null;
                         },
-                        onSaved: (value) {
-                          _userName = value ?? '';
-                        },
                       ),
                     TextFormField(
+                      controller: _userPasswordCtrl,
                       key: const ValueKey('Password'),
                       obscureText: true,
                       decoration: const InputDecoration(
@@ -208,9 +206,6 @@ class _AuthFormState extends State<AuthForm>
                           return 'Password must be at least 7 characters long.';
                         }
                         return null;
-                      },
-                      onSaved: (value) {
-                        _userPassword = value ?? '';
                       },
                     ),
                     const SizedBox(

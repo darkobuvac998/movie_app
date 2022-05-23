@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../widgets/auth/auth_form.dart';
 
@@ -14,9 +18,82 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  void _submitAuthForm(BuildContext ctx, String email, String password,
-      String username, bool isLogin, File? userImage) {
-    print(username);
+  final _auth = FirebaseAuth.instance;
+  var _isLoading = false;
+
+  Future<void> _submitAuthForm(BuildContext ctx, String email, String password,
+      String username, bool isLogin, File? userImage) async {
+    UserCredential authResult;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      print('$email, $password, $username');
+
+      if (isLogin) {
+        authResult = await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+      } else {
+        authResult = await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child(authResult.user!.uid + '.jpg');
+
+        await ref
+            .putFile(
+              userImage!,
+            )
+            .whenComplete(
+              () => null,
+            );
+
+        final url = await ref.getDownloadURL();
+
+        print(url);
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(
+              authResult.user?.uid,
+            )
+            .set(
+          {
+            'username': username,
+            'email': email,
+            'imageUrl': url,
+          },
+        );
+
+        print(username);
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    } on PlatformException catch (error) {
+      String? msg = 'An error occured, please check your credentials';
+
+      if (error.message != null) {
+        msg = error.message;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text(
+            msg ?? '',
+          ),
+        ),
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -31,7 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: AuthForm(
-          isLoading: false,
+          isLoading: _isLoading,
           onSubmit: _submitAuthForm,
         ),
       ),

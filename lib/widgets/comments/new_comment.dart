@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NewComment extends StatefulWidget {
@@ -31,6 +32,13 @@ class _NewCommentState extends State<NewComment> {
     var comment = _commentCtl.text.trim();
 
     try {
+      final userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(
+            FirebaseAuth.instance.currentUser?.uid,
+          )
+          .get();
+
       await FirebaseFirestore.instance
           .collection('movie-comments/${widget.movieId}/comments')
           .add(
@@ -39,6 +47,7 @@ class _NewCommentState extends State<NewComment> {
           'likes': 0,
           'dislikes': 0,
           'createdAt': Timestamp.now(),
+          'userName': userData['username'],
         },
       );
     } catch (error) {
