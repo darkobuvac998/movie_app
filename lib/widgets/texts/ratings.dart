@@ -24,14 +24,15 @@ class Ratings extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        ...ratings!.map(
-          (rating) {
-            return Text(
-              '- ${rating.source} (${rating.value})',
-              style: Theme.of(context).textTheme.headline4,
-            );
-          },
-        ),
+        if (ratings != null)
+          ...ratings!.map(
+            (rating) {
+              return Text(
+                '- ${rating.source} (${rating.value})',
+                style: Theme.of(context).textTheme.headline4,
+              );
+            },
+          ),
       ],
     );
   }

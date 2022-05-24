@@ -9,7 +9,7 @@ class MovieGrid extends StatelessWidget {
   final List<ShowShort> items;
   final Function onLoadMore;
 
-  MovieGrid({
+  const MovieGrid({
     required this.onLoadMore,
     required this.items,
     Key? key,

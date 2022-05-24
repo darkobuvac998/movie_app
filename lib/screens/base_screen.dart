@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/screens/favorite_screen.dart';
 
 import '../screens/profile_screen.dart';
 import '../screens/search_screen.dart';
@@ -24,9 +25,7 @@ class _BaseScreenState extends State<BaseScreen> {
           onProfileBadgeTap: () => _onIconTap(3),
         ),
         const SearchScreen(),
-        HomeScreen(
-          onProfileBadgeTap: () => _onIconTap(3),
-        ),
+        const FavoriteScreen(),
         const ProfileScreen(),
       ];
       _isInit = false;

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/widgets/comments/comment.dart';
 import 'package:provider/provider.dart';
@@ -254,10 +255,14 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
           SliverAppBar(
             actions: [
               IconButton(
-                icon: const Icon(
-                  Icons.favorite,
+                icon: Consumer<Movie>(
+                  builder: (ctx, movie, _) => Icon(
+                    movie.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red.shade700,
+                  ),
                 ),
-                onPressed: () {},
+                onPressed: () =>
+                    Provider.of<Movie>(context, listen: false).addToFavorites(),
               ),
               IconButton(
                 onPressed: _showCommentsToggle,

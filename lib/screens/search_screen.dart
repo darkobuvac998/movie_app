@@ -21,19 +21,26 @@ class _SearchScreenState extends State<SearchScreen> {
   void _onButtonTap(int index) {
     setState(() {
       _currentButtonIndex = index;
+      _serachMovies(_searchTerm);
     });
   }
 
   String _searchTerm = '';
+  String _type = 'movie';
 
-  void _serachMovies(String term) async {
-    if (_searchTerm != term) {
+  Future<void> _serachMovies(String term) async {
+    var type = _currentButtonIndex == 0 ? 'movie' : 'series';
+    if (_searchTerm != term && _type == type) {
+      _type = type;
       Provider.of<Movies>(context, listen: false).enableToLoadMoreMovies(true);
-
       _searchTerm = term;
       Provider.of<Movies>(context, listen: false).clearData();
+    } else if (_searchTerm == term && _type != type) {
+      _type = type;
+      Provider.of<Movies>(context, listen: false).clearData();
+      Provider.of<Movies>(context, listen: false).enableToLoadMoreMovies(true);
     }
-    Provider.of<Movies>(context, listen: false).searchMovies(term);
+    await Provider.of<Movies>(context, listen: false).searchMovies(term, _type);
   }
 
   @override
