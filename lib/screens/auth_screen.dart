@@ -29,8 +29,6 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = true;
       });
 
-      print('$email, $password, $username');
-
       if (isLogin) {
         authResult = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
@@ -53,8 +51,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
         final url = await ref.getDownloadURL();
 
-        print(url);
-
         await FirebaseFirestore.instance
             .collection('users')
             .doc(
@@ -67,8 +63,6 @@ class _AuthScreenState extends State<AuthScreen> {
             'imageUrl': url,
           },
         );
-
-        print(username);
       }
 
       setState(() {

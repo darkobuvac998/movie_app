@@ -275,10 +275,20 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
               background: SizedBox(
                 child: Hero(
                   tag: args['id'],
-                  child: Image.network(
-                    args['poster'],
-                    fit: BoxFit.contain,
-                  ),
+                  child: args['poster'] != 'N/A'
+                      ? Image.network(
+                          args['poster'],
+                          fit: BoxFit.contain,
+                        )
+                      : Center(
+                          child: Text(
+                            'No movie poster',
+                            style:
+                                Theme.of(context).textTheme.headline4?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                          ),
+                        ),
                 ),
               ),
             ),

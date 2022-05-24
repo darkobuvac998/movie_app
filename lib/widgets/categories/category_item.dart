@@ -37,10 +37,19 @@ class CategoryItem extends StatelessWidget {
         ),
         child: Hero(
           tag: id,
-          child: Image.network(
-            coverUrl,
-            fit: BoxFit.cover,
-          ),
+          child: coverUrl != 'N/A'
+              ? Image.network(
+                  coverUrl,
+                  fit: BoxFit.cover,
+                )
+              : Center(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.headline4?.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                ),
         ),
       ),
     );

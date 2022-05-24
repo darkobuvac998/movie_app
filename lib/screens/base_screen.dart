@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/screens/profile_screen.dart';
 
+import '../screens/profile_screen.dart';
+import '../screens/search_screen.dart';
 import 'home_screen.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -22,9 +23,7 @@ class _BaseScreenState extends State<BaseScreen> {
         HomeScreen(
           onProfileBadgeTap: () => _onIconTap(3),
         ),
-        HomeScreen(
-          onProfileBadgeTap: () => _onIconTap(3),
-        ),
+        const SearchScreen(),
         HomeScreen(
           onProfileBadgeTap: () => _onIconTap(3),
         ),
