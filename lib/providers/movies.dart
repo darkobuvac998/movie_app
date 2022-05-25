@@ -11,11 +11,16 @@ import '../models/show_short.dart';
 
 class Movies with ChangeNotifier {
   List<ShowShort> _items = [];
+  List<ShowShort> _searchItems = [];
   bool _canLoadMore = true;
   int _pageNumber = 0;
 
   List<ShowShort> get items {
     return [..._items];
+  }
+
+  List<ShowShort> get searchItems {
+    return [..._searchItems];
   }
 
   bool get canLoadMoreMovies {
@@ -48,6 +53,7 @@ class Movies with ChangeNotifier {
     if (_canLoadMore && _pageNumber <= 5) {
       _pageNumber += 1;
       var url = Uri.parse('${Urls.search}$term&page=$_pageNumber&type=$type');
+      print(url);
       try {
         final response = await http.get(url);
         final extractedData =
@@ -63,7 +69,7 @@ class Movies with ChangeNotifier {
         extractedData['Search']
             ?.forEach((element) => loadedItems.add(ShowShort.fromMap(element)));
 
-        _items = [..._items, ...loadedItems];
+        _searchItems = [..._searchItems, ...loadedItems];
         if (_pageNumber == 5) {
           _canLoadMore = false;
         }
@@ -74,16 +80,8 @@ class Movies with ChangeNotifier {
     }
   }
 
-  // Future<void> getFavoriteMovies() async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   var path = 'user-favorites/${user?.uid}/favorites';
-  //   final result = await FirebaseFirestore.instance.collection(path).snapshots();
-  //   print(result.);
-  // }
-
-  void clearData() {
-    this._pageNumber = 0;
-    this._items = [];
-    notifyListeners();
+  void clearSearchData() {
+    _pageNumber = 0;
+    _searchItems = [];
   }
 }

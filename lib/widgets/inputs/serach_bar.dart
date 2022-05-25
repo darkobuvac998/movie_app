@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class SearchBar extends StatelessWidget implements PreferredSizeWidget {
   final Function onSearch;
+  final String searchTerm;
   const SearchBar({
+    required this.searchTerm,
     required this.onSearch,
     Key? key,
   }) : super(key: key);
@@ -38,6 +40,7 @@ class SearchBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final searchCtl = TextEditingController();
+    searchCtl.text = searchTerm;
     return Container(
       margin: const EdgeInsets.all(
         3,

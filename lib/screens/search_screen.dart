@@ -32,12 +32,12 @@ class _SearchScreenState extends State<SearchScreen> {
     var type = _currentButtonIndex == 0 ? 'movie' : 'series';
     if (_searchTerm != term && _type == type) {
       _type = type;
-      Provider.of<Movies>(context, listen: false).enableToLoadMoreMovies(true);
       _searchTerm = term;
-      Provider.of<Movies>(context, listen: false).clearData();
+      Provider.of<Movies>(context, listen: false).enableToLoadMoreMovies(true);
+      Provider.of<Movies>(context, listen: false).clearSearchData();
     } else if (_searchTerm == term && _type != type) {
       _type = type;
-      Provider.of<Movies>(context, listen: false).clearData();
+      Provider.of<Movies>(context, listen: false).clearSearchData();
       Provider.of<Movies>(context, listen: false).enableToLoadMoreMovies(true);
     }
     await Provider.of<Movies>(context, listen: false).searchMovies(term, _type);
@@ -66,12 +66,13 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
         bottom: SearchBar(
+          searchTerm: _searchTerm,
           onSearch: _serachMovies,
         ),
       ),
       body: Consumer<Movies>(
         builder: (ctx, movies, _) {
-          if (movies.items.isEmpty) {
+          if (movies.searchItems.isEmpty) {
             return Center(
               child: Text(
                 'Nothing to show!',
@@ -83,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
           }
           return MovieGrid(
             onLoadMore: () => _serachMovies(_searchTerm),
-            items: movies.items,
+            items: movies.searchItems,
           );
         },
       ),

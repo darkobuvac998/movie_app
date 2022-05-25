@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app/widgets/comments/comment.dart';
 import 'package:provider/provider.dart';
 
 import '../models/show_full.dart';
+import '../widgets/categories/movie_categories_management.dart';
 import '../widgets/comments/comment_titlle.dart';
 import '../widgets/comments/comments.dart';
 import '../widgets/texts/awards.dart';
@@ -43,6 +42,23 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
       await Provider.of<Movie>(ctx, listen: false).getMovie(imdbId);
       _isInit = false;
     }
+  }
+
+  void _addMovieToCategory(BuildContext ctx, ShowFull? movie) {
+    if (movie == null) {
+      return;
+    }
+    showDialog(
+      context: ctx,
+      builder: (_) => Dialog(
+        child: MovieCategoriesManagement(
+          showAddBtn: true,
+          addMovieToCategory: () {
+            return movie;
+          },
+        ),
+      ),
+    );
   }
 
   List<Widget> _buildSliverListChildren(BuildContext ctx, ShowFull? data) {
@@ -254,6 +270,17 @@ class _ShowDetailScreenState extends State<ShowDetailScreen> {
         slivers: [
           SliverAppBar(
             actions: [
+              Consumer<Movie>(
+                builder: (ctx, movie, _) => IconButton(
+                  onPressed: () => _addMovieToCategory(
+                    context,
+                    movie.movie,
+                  ),
+                  icon: const Icon(
+                    Icons.category_rounded,
+                  ),
+                ),
+              ),
               IconButton(
                 icon: Consumer<Movie>(
                   builder: (ctx, movie, _) => Icon(
